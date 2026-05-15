@@ -1,0 +1,20 @@
+# Machine Learning & Data Science Baseline
+pandas
+numpy
+scikit-learn
+matplotlib
+pyarrow
+ipykernel
+Pillow
+requests
+nbformat
+nbconvert
+jupyter
+ipywidgets
+plotly
+plotly[express]
+seaborn
+xgboost
+scipy
+mlflow
+shap
