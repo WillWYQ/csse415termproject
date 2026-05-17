@@ -53,6 +53,7 @@ import warnings
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
+from PIL.ImagePalette import raw
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import cross_validate, train_test_split
@@ -119,13 +120,46 @@ class PreparedData:
 # ---------------------------------------------------------------------------
 
 def _build_binary_target(df: pd.DataFrame, target_col: str) -> pd.Series:
-    """Return a single 0 / 1 column as the target."""
+    """
+    Return a strict 0 / 1 Series for the given target column.
+
+    If the column already contains only {0, 1} values it is returned as-is
+    (fast path for Offer_Received).  Otherwise every value > 0 is mapped to 1
+    and 0 stays 0.
+
+    This handles raw count columns (First_Round_Interviews, Second_Round_Interviews)
+    which store the number of interviews held, not a binary flag.  Binarising
+    gives the natural interpretation: "did the student get any interview?".
+    It also prevents stratified train_test_split from failing on rare count
+    values that have only one sample.
+    """
     if target_col not in df.columns:
         raise ValueError(
             f"Binary target column '{target_col}' not found. "
             f"Available columns: {list(df.columns)}"
         )
-    return df[target_col].astype(int)
+
+    raw = df[target_col]
+    unique_vals = set(raw.dropna().unique())
+
+    if unique_vals <= {0, 1}:
+        # Already strictly binary — fast path (e.g. Offer_Received)
+        return raw.astype(int)
+
+    # Count column: binarise by positivity  (0 → 0, any positive count → 1)
+    binarised = (raw > 0).astype(int)
+    n_pos   = int(binarised.sum())
+    n_total = len(binarised)
+    sorted_uniq = sorted(unique_vals)
+    preview = sorted_uniq[:8]
+    ellipsis = "…" if len(sorted_uniq) > 8 else ""
+    print(
+        f"  [prepare] '{target_col}' is a count column "
+        f"(unique values: {preview}{ellipsis}).\n"
+        f"  Binarised to (>0)=1: {n_pos:,} positives / {n_total:,} total "
+        f"({100 * n_pos / n_total:.1f}%)"
+    )
+    return binarised
 
 
 def _build_4class_target(df: pd.DataFrame) -> pd.Series:
