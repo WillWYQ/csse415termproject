@@ -130,6 +130,7 @@ CONFIG: Dict[str, Any] = {
     #   target and removes them automatically after that.
     #
     "drop_cols": [
+        "",
         "Student_ID",
         "Time_to_Offer_Days",
         "Offer_Salary",
@@ -375,7 +376,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         ModelSpec(
             name      = "Ridge Logistic Regression",
             estimator = LogisticRegression(
-                penalty="l2", max_iter=3000, random_state=0,
+                max_iter=10000, random_state=0,
                 class_weight="balanced",
             ),
             dataset   = "FE",
@@ -389,7 +390,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         ModelSpec(
             name      = "Lasso Logistic Regression",
             estimator = LogisticRegression(
-                penalty="l1", solver="saga", max_iter=3000, random_state=0,
+                l1_ratio=1, solver='saga', max_iter=10000, random_state=0,
                 class_weight="balanced",
             ),
             dataset   = "FE",
@@ -403,7 +404,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         ModelSpec(
             name      = "LinearSVC",
             estimator = CalibratedClassifierCV(
-                LinearSVC(max_iter=5000, random_state=0, class_weight="balanced")
+                LinearSVC(max_iter=20000, random_state=0, class_weight="balanced")
             ),
             dataset   = "FE",
             param_grid_1 = {
@@ -438,11 +439,12 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
             ),
             dataset   = "base",
             param_grid_1 = {
-                "n_estimators": (np.array([10, 100]) if quick
-                                 else np.arange(1, 501, 50)),
-                "max_depth":    (np.array([5, 15])   if quick
-                                 else np.arange(1, 26, 5)),
+                "n_estimators": (np.array([10, 100]) if quick 
+                     else (np.arange(1, 501, 50).tolist() + [None])), # Fixed syntax
+                "max_depth":    (np.array([5, 15]) if quick 
+                     else (np.arange(1, 26, 5).tolist() + [None])),  # Added None correctly
             },
+
             refine_fn = _refine_rf,
         ),
 
@@ -452,8 +454,8 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
             dataset   = "base",
             param_grid_1 = {
                 "learning_rate": ([0.05, 0.1]   if quick else [0.01, 0.05, 0.1]),
-                "n_estimators":  ([50, 100]      if quick else [50, 100, 200, 300]),
-                "max_depth":     ([3]            if quick else [1, 2, 3, 5, 7]),
+                "n_estimators":  ([50, 100]      if quick else [50, 100, 200, 300, 500, 600, 700, 800, 900, 1000]),
+                "max_depth":     ([3]            if quick else [1, 2, 3, 5, 7, 10]),
             },
             refine_fn = _refine_gbt,
         ),
