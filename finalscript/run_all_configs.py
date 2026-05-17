@@ -268,6 +268,19 @@ def _build_config(
     cfg["target_mode"] = "binary"
     cfg["target_col"]  = experiment["target_col"]
 
+    # ── Key-name bridge ───────────────────────────────────────────────────────
+    # prepare.py reads different key names than train_and_export.CONFIG uses:
+    #
+    #   train_and_export key  │  prepare.py reads        │ mismatch fixed here
+    #   ──────────────────────┼──────────────────────────┼────────────────────
+    #   "target_col"          │ config.get("target", …)  │  cfg["target"]
+    #   "do_fe"               │ config.get(              │  cfg["feature_engineering"]
+    #                         │   "feature_engineering", …)
+    #
+    # Both keys are set so either module finds what it expects.
+    cfg["target"]              = experiment["target_col"]
+    cfg["feature_engineering"] = cfg.get("do_fe", True)
+
     # Build the final drop list, guarding against accidentally dropping target
     target = experiment["target_col"]
     raw_drop = list(dict.fromkeys(_BASE_DROP + experiment["extra_drop"]))  # dedupe, order-stable
