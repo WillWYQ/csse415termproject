@@ -72,7 +72,14 @@ from typing import Any, Dict, List, Optional
 _HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE))
 
-from train_and_export import CONFIG as _BASE_CONFIG, run  # noqa: E402
+import train_and_export as _tae  # noqa: E402
+
+# Snapshot of the default settings — never mutated after this point.
+# We deepcopy it per experiment; _tae.CONFIG is patched in-place so that
+# any module (e.g. prepare.py) that holds a reference to the same dict
+# object picks up the correct per-experiment settings.
+_BASE_CONFIG = copy.deepcopy(_tae.CONFIG)
+run = _tae.run
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -435,6 +442,15 @@ def main() -> None:
         err_msg = ""
 
         try:
+            # ── Patch the module-level CONFIG in-place ────────────────────────
+            # prepare.py (and any other sibling module) may hold a reference to
+            # the same dict object as train_and_export.CONFIG.  Updating it
+            # in-place ensures those references see the correct per-experiment
+            # settings (target_col, drop_cols, etc.) even if they imported the
+            # dict at module load time.
+            _tae.CONFIG.clear()
+            _tae.CONFIG.update(cfg)
+
             run(cfg)
         except Exception:
             status  = "FAILED"
