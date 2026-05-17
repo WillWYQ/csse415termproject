@@ -470,12 +470,14 @@ def prepare(df: pd.DataFrame, config: dict) -> PreparedData:
 
         # Expand numeric columns only — polynomial terms of binary one-hot
         # columns are redundant (x² = x for x ∈ {0, 1}).
-        poly_candidate_cols = list(poly.get_feature_names_out(numeric_cols))
-
         X_train_poly = pd.DataFrame(
             poly.fit_transform(X_train_scaled[numeric_cols]),
             columns=poly_candidate_cols,
         )
+        
+        poly_candidate_cols = list(poly.get_feature_names_out(numeric_cols))
+
+        
         X_test_poly = pd.DataFrame(
             poly.transform(X_test_scaled[numeric_cols]),
             columns=poly_candidate_cols,
