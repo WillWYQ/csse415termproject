@@ -365,7 +365,7 @@ def build_model_specs() -> List[ModelSpec]:
         ModelSpec(
             name      = "Ridge Logistic Regression",
             estimator = LogisticRegression(
-                penalty="l2", max_iter=3000, random_state=0
+                l1_ratio=0, max_iter=5000, random_state=0
             ),
             dataset   = "FE",
             param_grid_1 = {
@@ -378,7 +378,7 @@ def build_model_specs() -> List[ModelSpec]:
         ModelSpec(
             name      = "Lasso Logistic Regression",
             estimator = LogisticRegression(
-                penalty="l1", solver="saga", max_iter=3000, random_state=0
+                l1_ratio=1, solver="saga", max_iter=5000, random_state=0
             ),
             dataset   = "FE",
             param_grid_1 = {
@@ -391,7 +391,7 @@ def build_model_specs() -> List[ModelSpec]:
         ModelSpec(
             name      = "LinearSVC",
             estimator = CalibratedClassifierCV(
-                LinearSVC(max_iter=5000, random_state=0)
+                LinearSVC(max_iter=20000, random_state=0)
             ),
             dataset   = "FE",
             param_grid_1 = {
@@ -420,8 +420,8 @@ def build_model_specs() -> List[ModelSpec]:
             estimator = RandomForestClassifier(random_state=0, n_jobs=1),
             dataset   = "base",
             param_grid_1 = {
-                "n_estimators": np.arange(1, 501, 50),
-                "max_depth":    np.arange(1, 26,  5),
+                "n_estimators": (np.arange(1, 501, 50).tolist() + [None]),
+                "max_depth":    (np.arange(1, 26, 5).tolist() + [None]),
             },
             refine_fn = _refine_rf,
             # Continuous Bayesian space.
