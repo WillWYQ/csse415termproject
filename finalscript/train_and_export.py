@@ -338,16 +338,20 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         }
 
     def _refine_rf(best):
+        d = best["max_depth"]
         return {
             "n_estimators": zoom_int(int(best["n_estimators"]), step=1,  n=10),
-            "max_depth":    zoom_int(int(best["max_depth"]),    step=1,  n=2),
+            "max_depth":    (zoom_int(d, step=1, n=2) if d is not None
+                             else [6, 8, 10, 12, None]),
         }
 
     def _refine_gbt(best):
+        d = best["max_depth"]
         return {
             "learning_rate": [float(best["learning_rate"])],
             "n_estimators":  zoom_int(int(best["n_estimators"]), step=10, n=3),
-            "max_depth":     zoom_int(int(best["max_depth"]),    step=1,  n=2),
+            "max_depth":     (zoom_int(d, step=1, n=2) if d is not None
+                              else [3, 5, 7, 10, None]),
         }
 
     def _refine_kernel_svm(best):

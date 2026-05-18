@@ -308,21 +308,23 @@ def _refine_dt(best: Dict) -> Dict:
 
 def _refine_rf(best: Dict) -> Dict:
     n = int(best["n_estimators"])
-    d = int(best["max_depth"])
+    d = best["max_depth"]
     return {
         "n_estimators": zoom_int(n, step=1, n=10),
-        "max_depth":    zoom_int(d, step=1, n=2),
+        "max_depth":    (zoom_int(d, step=1, n=2) if d is not None
+                         else [6, 8, 10, 12, None]),
     }
 
 
 def _refine_gbt(best: Dict) -> Dict:
     n  = int(best["n_estimators"])
-    d  = int(best["max_depth"])
+    d  = best["max_depth"]
     lr = float(best["learning_rate"])
     return {
         "learning_rate": [lr],
         "n_estimators":  zoom_int(n, step=10, n=3),
-        "max_depth":     zoom_int(d, step=1,  n=2),
+        "max_depth":     (zoom_int(d, step=1, n=2) if d is not None
+                          else [3, 5, 7, 10, None]),
     }
 
 
@@ -432,7 +434,7 @@ def build_model_specs() -> List[ModelSpec]:
             estimator = RandomForestClassifier(random_state=0, n_jobs=N_JOBS),
             dataset   = "base",
             param_grid_1 = {
-                "n_estimators": (np.arange(1, 501, 50).tolist() + [None]),
+                "n_estimators": np.arange(1, 501, 50).tolist(),
                 "max_depth":    (np.arange(1, 26, 5).tolist() + [None]),
             },
             refine_fn = _refine_rf,
