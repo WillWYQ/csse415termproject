@@ -456,8 +456,8 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
             ),
             dataset   = "base",
             param_grid_1 = {
-                "n_estimators": (np.array([10, 100]) if quick 
-                     else (np.arange(1, 501, 50).tolist() + [None])), # Fixed syntax
+                "n_estimators": (np.array([10, 100]) if quick
+                     else np.arange(1, 501, 50).tolist()),
                 "max_depth":    (np.array([5, 15]) if quick 
                      else (np.arange(1, 26, 5).tolist() + [None])),  # Added None correctly
             },
