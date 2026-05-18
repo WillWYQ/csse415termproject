@@ -53,6 +53,13 @@ and we are responsible for its correctness and suitability for our project.
 
 from __future__ import annotations
 
+import os
+
+# ── Thread-count control (set before numpy / sklearn are imported) ────────────
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"]      = "1"
+os.environ["MKL_NUM_THREADS"]      = "1"
+
 import argparse
 import io
 import pathlib
@@ -66,6 +73,11 @@ from typing import Any, Dict, List, Optional
 import joblib
 import numpy as np
 import pandas as pd
+
+# 物理核心数（不含超线程），留 2 个给系统
+n_physical = joblib.cpu_count(only_physical_cores=True)
+N_JOBS = max(1, n_physical - 2)
+print(f"[config] physical cores={n_physical}, using n_jobs={N_JOBS}")
 
 # ── Local modules ─────────────────────────────────────────────────────────────
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
@@ -352,7 +364,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
 
         ModelSpec(
             name      = "KNN (tuned)",
-            estimator = KNeighborsClassifier(n_jobs=-1),
+            estimator = KNeighborsClassifier(n_jobs=N_JOBS),
             dataset   = "FE",
             param_grid_1 = {
                 "n_neighbors": (np.array([3, 11, 21]) if quick
@@ -435,7 +447,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         ModelSpec(
             name      = "Random Forest (tuned)",
             estimator = RandomForestClassifier(
-                random_state=0, n_jobs=-1, class_weight="balanced"
+                random_state=0, n_jobs=N_JOBS, class_weight="balanced"
             ),
             dataset   = "base",
             param_grid_1 = {

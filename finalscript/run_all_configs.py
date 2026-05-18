@@ -57,6 +57,13 @@ and we are responsible for its correctness and suitability for our project.
 
 from __future__ import annotations
 
+import os
+
+# ── Thread-count control (set before any BLAS-using library is imported) ──────
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"]      = "1"
+os.environ["MKL_NUM_THREADS"]      = "1"
+
 import argparse
 import copy
 import pathlib

@@ -66,6 +66,18 @@ for its correctness and suitability for our project.
 
 from __future__ import annotations
 
+import os
+
+import joblib
+
+# ── Thread-count control (set before numpy / sklearn are imported) ────────────
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"]      = "1"
+os.environ["MKL_NUM_THREADS"]      = "1"
+
+n_physical = joblib.cpu_count(only_physical_cores=True)
+N_JOBS = max(1, n_physical - 2)
+
 import time
 import warnings
 from dataclasses import dataclass, field
@@ -417,7 +429,7 @@ def build_model_specs() -> List[ModelSpec]:
         # ── Random Forest ─────────────────────────────────────────────────────
         ModelSpec(
             name      = "Random Forest (tuned)",
-            estimator = RandomForestClassifier(random_state=0, n_jobs=1),
+            estimator = RandomForestClassifier(random_state=0, n_jobs=N_JOBS),
             dataset   = "base",
             param_grid_1 = {
                 "n_estimators": (np.arange(1, 501, 50).tolist() + [None]),
@@ -520,7 +532,7 @@ def _run_grid_search(
         scoring=scoring,
         cv=cv,
         return_train_score=True,
-        n_jobs=-1,
+        n_jobs=N_JOBS,
     )
     gs.fit(X_train, y_train)
     return (
@@ -548,7 +560,7 @@ def _fit_direct(
     estimator.fit(X_train, y_train)
     cv_scores = cross_val_score(
         estimator, X_train, y_train,
-        scoring=scoring, cv=min(cv, 3), n_jobs=-1
+        scoring=scoring, cv=min(cv, 3), n_jobs=N_JOBS
     )
     return (
         estimator,
@@ -614,7 +626,7 @@ def _run_bayes_search(
             warnings.simplefilter("ignore")
             scores = cross_val_score(
                 model, X_train, y_train,
-                scoring=scoring, cv=cv, n_jobs=-1,
+                scoring=scoring, cv=cv, n_jobs=N_JOBS,
             )
         mean_score = float(scores.mean())
         trial_log.append({

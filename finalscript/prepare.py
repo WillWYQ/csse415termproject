@@ -49,6 +49,18 @@ We ensured we understand and verify all AI-generated code, and we are responsibl
 
 from __future__ import annotations
 
+import os
+
+import joblib
+
+# ── Thread-count control (set before numpy / sklearn are imported) ────────────
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["OMP_NUM_THREADS"]      = "1"
+os.environ["MKL_NUM_THREADS"]      = "1"
+
+n_physical = joblib.cpu_count(only_physical_cores=True)
+N_JOBS = max(1, n_physical - 2)
+
 import warnings
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
@@ -225,7 +237,7 @@ def _make_fe_estimator(fe_kind: str, random_state: int, max_iter: int):
     if fe_kind == "knn":
         from sklearn.neighbors import KNeighborsClassifier
         # k=11 is more stable than the default 5 on large datasets
-        return KNeighborsClassifier(n_neighbors=11, n_jobs=-1)
+        return KNeighborsClassifier(n_neighbors=11, n_jobs=N_JOBS)
 
     raise ValueError(
         f"Unknown fe_kind '{fe_kind}'. Supported values: 'logreg', 'knn'."
@@ -262,7 +274,7 @@ def _greedy_forward_select(
         y_train,
         scoring="accuracy",
         cv=cv,
-        n_jobs=-1,
+        n_jobs=N_JOBS,
     )
     best_accuracy = float(cv_res["test_score"].mean())
     best_model = model.copy()
@@ -278,7 +290,7 @@ def _greedy_forward_select(
                 y_train,
                 scoring="accuracy",
                 cv=cv,
-                n_jobs=-1,
+                n_jobs=N_JOBS,
             )
             scores[k] = float(cv_res["test_score"].mean())
 
