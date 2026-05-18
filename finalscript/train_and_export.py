@@ -417,7 +417,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         ModelSpec(
             name      = "LinearSVC",
             estimator = CalibratedClassifierCV(
-                LinearSVC(max_iter=20000, random_state=0, class_weight="balanced")
+                LinearSVC(max_iter=50000, tol=1e-3, random_state=0, class_weight="balanced")
             ),
             dataset   = "FE",
             param_grid_1 = {
