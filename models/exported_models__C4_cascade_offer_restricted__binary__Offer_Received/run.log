@@ -1,0 +1,785 @@
+
+======================================================================
+  Run started  2026-05-18 07:54:59 UTC
+======================================================================
+
+[main] Loading data from '../data/job_search_platform_efficacy_100k.csv' ...
+[main] Raw shape: (100000, 20)
+
+[main] Preparing data ...
+[prepare] Starting data preparation …
+[prepare] Step 1 — cleaning …
+  Dropping 1791 duplicate rows.
+  Shape after cleaning: (98209, 10)
+[prepare] Step 2 — building target …
+  Class distribution:
+Offer_Received
+0    64407
+1    33802
+[prepare] Step 3 — encoding …
+  Numeric     (5): ['GPA', 'Prior_Internships', 'Extra_Curricular_Activities', 'First_Round_Interviews', 'Second_Round_Interviews']
+  Categorical (4): ['University_Rating', 'School_Size', 'Region', 'Major_Category']
+[prepare] Step 4 — train/test split …
+  Train (78567, 16)  |  Test (19642, 16)
+  n_classes=2  class_weights={0: 0.7624163027656478, 1: 1.4526847126691813}
+[prepare] Step 5 — standardising …
+[prepare] Step 6 — feature engineering (degree=2, fe_kind='logreg') …
+  [FE] remaining candidates: 15
+  [FE] +Second_Round_Interviews  →  cv acc = 0.7730
+  [FE] remaining candidates: 14
+  [FE] +First_Round_Interviews  →  cv acc = 0.7912
+  [FE] remaining candidates: 13
+  [FE] +Prior_Internships  →  cv acc = 0.7954
+  [FE] remaining candidates: 12
+  [FE] +First_Round_Interviews Second_Round_Interviews  →  cv acc = 0.8034
+  [FE] remaining candidates: 11
+  [FE] +GPA  →  cv acc = 0.8109
+  [FE] remaining candidates: 10
+  [FE] +Prior_Internships First_Round_Interviews  →  cv acc = 0.8114
+  [FE] remaining candidates: 9
+  [FE] +GPA First_Round_Interviews  →  cv acc = 0.8115
+  [FE] remaining candidates: 8
+  [FE] +GPA Prior_Internships  →  cv acc = 0.8117
+  [FE] remaining candidates: 7
+  [FE] +GPA Second_Round_Interviews  →  cv acc = 0.8117
+  [FE] remaining candidates: 6
+  [FE] +Extra_Curricular_Activities First_Round_Interviews  →  cv acc = 0.8117
+  [FE] remaining candidates: 5
+  [FE] +Extra_Curricular_Activities  →  cv acc = 0.8118
+  [FE] remaining candidates: 4
+  [FE] +Extra_Curricular_Activities Second_Round_Interviews  →  cv acc = 0.8116
+  [FE] remaining candidates: 3
+  [FE] +Prior_Internships Extra_Curricular_Activities  →  cv acc = 0.8115
+  [FE] remaining candidates: 2
+  [FE] +Prior_Internships Second_Round_Interviews  →  cv acc = 0.8113
+  [FE] remaining candidates: 1
+  [FE] +GPA Extra_Curricular_Activities  →  cv acc = 0.8111
+  [FE] 6 / 15 polynomial columns selected.
+
+[prepare] Done.
+  X_train_FE   : (78567, 22)
+  X_train_base : (78567, 16)
+  Features before encoding (9): ['University_Rating', 'School_Size', 'Region', 'Major_Category', 'GPA', 'Prior_Internships', 'Extra_Curricular_Activities', 'First_Round_Interviews', 'Second_Round_Interviews']
+
+[main] Building model specs ...
+[main] 9 models will be trained:
+  * KNN (tuned)  [FE]
+  * Logistic Regression  [FE]
+  * Ridge Logistic Regression  [FE]
+  * Lasso Logistic Regression  [FE]
+  * LinearSVC  [FE]
+  * Decision Tree (tuned)  [base]
+  * Random Forest (tuned)  [base]
+  * Gradient Boosting (tuned)  [base]
+  * Kernel SVM (Nystroem RBF)  [base]
+
+[main] Training models ...
+
+  Baseline (most-frequent class = No Offer_Received)  test accuracy: 0.6558
+
+──────────────────────────────────────────────────────────────
+  Training : KNN (tuned)  [FE]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (60 combos × 5-fold CV)
+    best params : {'metric': 'manhattan', 'n_neighbors': np.int64(31), 'weights': 'uniform'}
+    val accuracy: 0.8653
+  Round 2 : fine grid    (7 combos × 5-fold CV)
+    best params : {'metric': 'manhattan', 'n_neighbors': np.int64(34), 'weights': 'uniform'}
+    val accuracy: 0.8662
+  Test accuracy : 0.8594   (310.3s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Logistic Regression  [FE]
+──────────────────────────────────────────────────────────────
+  Round 1 : no hyperparameters — fitting directly.
+  Round 2 : skipped (refine_fn returned empty grid).
+  Test accuracy : 0.8033   (0.4s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Ridge Logistic Regression  [FE]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (9 combos × 5-fold CV)
+    best params : {'C': np.float64(0.01)}
+    val accuracy: 0.8078
+  Round 2 : fine grid    (11 combos × 5-fold CV)
+    best params : {'C': np.float64(0.01)}
+    val accuracy: 0.8078
+  Test accuracy : 0.8035   (1.9s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Lasso Logistic Regression  [FE]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (9 combos × 5-fold CV)
+    best params : {'C': np.float64(0.1)}
+    val accuracy: 0.8075
+  Round 2 : fine grid    (11 combos × 5-fold CV)
+    best params : {'C': np.float64(0.039810717055349734)}
+    val accuracy: 0.8076
+  Test accuracy : 0.8031   (4.6s total)
+
+──────────────────────────────────────────────────────────────
+  Training : LinearSVC  [FE]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (22 combos × 5-fold CV)
+    best params : {'estimator__C': 0.001, 'estimator__loss': 'hinge'}
+    val accuracy: 0.8148
+  Round 2 : fine grid    (11 combos × 5-fold CV)
+    best params : {'estimator__C': np.float64(0.0007943282347242813), 'estimator__loss': 'hinge'}
+    val accuracy: 0.8152
+  Test accuracy : 0.8124   (835.5s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Decision Tree (tuned)  [base]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (81 combos × 5-fold CV)
+    best params : {'max_depth': 10, 'min_samples_leaf': 5, 'min_samples_split': 50}
+    val accuracy: 0.8661
+  Round 2 : fine grid    (5 combos × 5-fold CV)
+    best params : {'max_depth': np.int64(9), 'min_samples_leaf': 5, 'min_samples_split': 50}
+    val accuracy: 0.8668
+  Test accuracy : 0.8607   (54.2s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Random Forest (tuned)  [base]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (60 combos × 5-fold CV)
+/work/envs/venv/ML_cpu/lib/python3.11/site-packages/joblib/externals/loky/process_executor.py:782: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+  warnings.warn(
+    best params : {'max_depth': 16, 'n_estimators': 401}
+    val accuracy: 0.8651
+  Round 2 : fine grid    (105 combos × 5-fold CV)
+/work/envs/venv/ML_cpu/lib/python3.11/site-packages/joblib/externals/loky/process_executor.py:782: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+  warnings.warn(
+    best params : {'max_depth': np.int64(17), 'n_estimators': np.int64(403)}
+    val accuracy: 0.8660
+  Test accuracy : 0.8596   (180.2s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Gradient Boosting (tuned)  [base]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (180 combos × 5-fold CV)
+    best params : {'learning_rate': 0.01, 'max_depth': 7, 'n_estimators': 300}
+    val accuracy: 0.8745
+  Round 2 : fine grid    (35 combos × 5-fold CV)
+    best params : {'learning_rate': 0.01, 'max_depth': np.int64(6), 'n_estimators': np.int64(290)}
+    val accuracy: 0.8746
+  Test accuracy : 0.8692   (536.3s total)
+
+──────────────────────────────────────────────────────────────
+  Training : Kernel SVM (Nystroem RBF)  [base]
+──────────────────────────────────────────────────────────────
+  Round 1 : coarse grid  (192 combos × 5-fold CV)
+    best params : {'clf__C': np.float64(1000.0), 'nystroem__gamma': np.float64(0.1), 'nystroem__n_components': 1000}
+    val accuracy: 0.8526
+  Round 2 : fine grid    (81 combos × 5-fold CV)
+    best params : {'clf__C': np.float64(1539.926526059492), 'nystroem__gamma': np.float64(0.23713737056616552), 'nystroem__n_components': 1000}
+    val accuracy: 0.8534
+  Test accuracy : 0.8539   (322.3s total)
+
+
+══════════════════════════════════════════════════════════════
+  CLASSIFICATION REPORTS
+══════════════════════════════════════════════════════════════
+
+── KNN (tuned) ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.91      0.87      0.89     12882
+   Offer_Received       0.77      0.84      0.80      6760
+
+         accuracy                           0.86     19642
+        macro avg       0.84      0.85      0.85     19642
+     weighted avg       0.86      0.86      0.86     19642
+
+
+── Logistic Regression ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.89      0.80      0.84     12882
+   Offer_Received       0.68      0.82      0.74      6760
+
+         accuracy                           0.80     19642
+        macro avg       0.78      0.81      0.79     19642
+     weighted avg       0.82      0.80      0.81     19642
+
+
+── Ridge Logistic Regression ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.89      0.80      0.84     12882
+   Offer_Received       0.68      0.81      0.74      6760
+
+         accuracy                           0.80     19642
+        macro avg       0.78      0.81      0.79     19642
+     weighted avg       0.82      0.80      0.81     19642
+
+
+── Lasso Logistic Regression ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.89      0.80      0.84     12882
+   Offer_Received       0.68      0.81      0.74      6760
+
+         accuracy                           0.80     19642
+        macro avg       0.78      0.81      0.79     19642
+     weighted avg       0.82      0.80      0.81     19642
+
+
+── LinearSVC ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.83      0.90      0.86     12882
+   Offer_Received       0.77      0.65      0.71      6760
+
+         accuracy                           0.81     19642
+        macro avg       0.80      0.77      0.78     19642
+     weighted avg       0.81      0.81      0.81     19642
+
+
+── Decision Tree (tuned) ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.95      0.84      0.89     12882
+   Offer_Received       0.74      0.91      0.82      6760
+
+         accuracy                           0.86     19642
+        macro avg       0.84      0.87      0.85     19642
+     weighted avg       0.88      0.86      0.86     19642
+
+
+── Random Forest (tuned) ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.93      0.85      0.89     12882
+   Offer_Received       0.75      0.88      0.81      6760
+
+         accuracy                           0.86     19642
+        macro avg       0.84      0.87      0.85     19642
+     weighted avg       0.87      0.86      0.86     19642
+
+
+── Gradient Boosting (tuned) ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.92      0.88      0.90     12882
+   Offer_Received       0.78      0.85      0.82      6760
+
+         accuracy                           0.87     19642
+        macro avg       0.85      0.87      0.86     19642
+     weighted avg       0.87      0.87      0.87     19642
+
+
+── Kernel SVM (Nystroem RBF) ──
+                   precision    recall  f1-score   support
+
+No Offer_Received       0.95      0.82      0.88     12882
+   Offer_Received       0.73      0.92      0.81      6760
+
+         accuracy                           0.85     19642
+        macro avg       0.84      0.87      0.85     19642
+     weighted avg       0.88      0.85      0.86     19642
+
+
+
+══════════════════════════════════════════════════════════════
+  INDIVIDUAL PREDICTION ANALYSIS
+══════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : KNN (tuned)
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=19641  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +1.461
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #2  index=19640  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.372
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+    #3  index=23  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -1.136
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=19590  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +1.996
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+    #2  index=19586  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -1.390
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+    #3  index=47  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.315
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Logistic Regression
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=5202  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.219
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +9.606
+    #2  index=16224  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.576
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +8.731
+    #3  index=18959  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.830
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : +5.643
+      Second_Round_Interviews            : +4.356
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=6828  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.346
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : +2.114
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +2.606
+    #2  index=2101  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.545
+      Prior_Internships                  : +1.594
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : +5.643
+      Second_Round_Interviews            : +5.231
+    #3  index=527  true=No Offer_Received  predicted=Offer_Received  confidence=0.9997
+    numeric features:
+      GPA                                : +1.181
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +1.731
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Ridge Logistic Regression
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=5202  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.219
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +9.606
+    #2  index=16224  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.576
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +8.731
+    #3  index=18959  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.830
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : +5.643
+      Second_Round_Interviews            : +4.356
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=6828  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.346
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : +2.114
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +2.606
+    #2  index=2101  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.545
+      Prior_Internships                  : +1.594
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : +5.643
+      Second_Round_Interviews            : +5.231
+    #3  index=527  true=No Offer_Received  predicted=Offer_Received  confidence=0.9995
+    numeric features:
+      GPA                                : +1.181
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +1.731
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Lasso Logistic Regression
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=5202  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.219
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +9.606
+    #2  index=16224  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.576
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +8.731
+    #3  index=18959  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.830
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : +5.643
+      Second_Round_Interviews            : +4.356
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=6828  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.346
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : +2.114
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +2.606
+    #2  index=2101  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.545
+      Prior_Internships                  : +1.594
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : +5.643
+      Second_Round_Interviews            : +5.231
+    #3  index=527  true=No Offer_Received  predicted=Offer_Received  confidence=0.9997
+    numeric features:
+      GPA                                : +1.181
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +1.731
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : LinearSVC
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=16224  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.576
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +8.731
+    #2  index=5202  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.219
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : +5.121
+      Second_Round_Interviews            : +9.606
+    #3  index=6828  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.346
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : +2.114
+      First_Round_Interviews             : +6.688
+      Second_Round_Interviews            : +2.606
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=4099  true=Offer_Received  predicted=No Offer_Received  confidence=0.9997
+    numeric features:
+      GPA                                : +2.047
+      Prior_Internships                  : +2.482
+      Extra_Curricular_Activities        : +1.408
+      First_Round_Interviews             : +1.467
+      Second_Round_Interviews            : +3.481
+    #2  index=1765  true=Offer_Received  predicted=No Offer_Received  confidence=0.9993
+    numeric features:
+      GPA                                : +0.927
+      Prior_Internships                  : +2.482
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : +1.467
+      Second_Round_Interviews            : +3.481
+    #3  index=7371  true=Offer_Received  predicted=No Offer_Received  confidence=0.9992
+    numeric features:
+      GPA                                : +1.970
+      Prior_Internships                  : +2.482
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : +0.945
+      Second_Round_Interviews            : +2.606
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Decision Tree (tuned)
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=19635  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.703
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #2  index=19634  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.321
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #3  index=19641  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +1.461
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=19625  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.754
+      Prior_Internships                  : +1.594
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : -0.099
+      Second_Round_Interviews            : -0.893
+    #2  index=160  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.932
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+    #3  index=19596  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.856
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Random Forest (tuned)
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=19615  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -1.263
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+    #2  index=19641  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +1.461
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #3  index=23  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -1.136
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=19596  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.856
+      Prior_Internships                  : -1.069
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #2  index=47  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.315
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #3  index=176  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.576
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.893
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Gradient Boosting (tuned)
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=18619  true=No Offer_Received  predicted=No Offer_Received  confidence=0.9811
+    numeric features:
+      GPA                                : +0.697
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : +0.702
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.019
+    #2  index=8262  true=No Offer_Received  predicted=No Offer_Received  confidence=0.9811
+    numeric features:
+      GPA                                : +0.723
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.019
+    #3  index=10320  true=No Offer_Received  predicted=No Offer_Received  confidence=0.9811
+    numeric features:
+      GPA                                : +0.748
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.019
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=13830  true=No Offer_Received  predicted=Offer_Received  confidence=0.9811
+    numeric features:
+      GPA                                : +1.257
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : -1.416
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.019
+    #2  index=15833  true=No Offer_Received  predicted=Offer_Received  confidence=0.9811
+    numeric features:
+      GPA                                : +1.207
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.019
+    #3  index=1323  true=No Offer_Received  predicted=Offer_Received  confidence=0.9811
+    numeric features:
+      GPA                                : +1.894
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : -0.710
+      First_Round_Interviews             : -0.621
+      Second_Round_Interviews            : -0.019
+
+══════════════════════════════════════════════════════════════
+  Individual prediction analysis : Kernel SVM (Nystroem RBF)
+══════════════════════════════════════════════════════════════
+
+  ── BEST (correct, highest confidence) ──
+    #1  index=18466  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.366
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #2  index=9860  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.825
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #3  index=1597  true=No Offer_Received  predicted=No Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.570
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+
+  ── WORST (wrong,   highest confidence) ──
+    #1  index=1598  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : +0.137
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #2  index=3658  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.143
+      Prior_Internships                  : +0.706
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+    #3  index=14653  true=No Offer_Received  predicted=Offer_Received  confidence=1.0000
+    numeric features:
+      GPA                                : -0.372
+      Prior_Internships                  : -0.181
+      Extra_Curricular_Activities        : -0.004
+      First_Round_Interviews             : -1.143
+      Second_Round_Interviews            : -0.893
+
+
+══════════════════════════════════════════════════════════════
+  FEATURE IMPORTANCE — top 12 (Base feature set)
+══════════════════════════════════════════════════════════════
+                    Feature  Decision Tree (tuned)  Random Forest (tuned)  Gradient Boosting (tuned)
+    Second_Round_Interviews               0.742075               0.422145                   0.673451
+     First_Round_Interviews               0.230127               0.355154                   0.290898
+          Prior_Internships               0.020927               0.041865                   0.028336
+                        GPA               0.005609               0.083258                   0.006741
+Extra_Curricular_Activities               0.000716               0.033054                   0.000142
+          School_Size_Small               0.000129               0.006629                   0.000158
+ University_Rating_Top-tier               0.000106               0.004634                   0.000146
+ University_Rating_Mid-tier               0.000087               0.007036                   0.000014
+  Major_Category_Healthcare               0.000059               0.004492                   0.000017
+    Major_Category_Business               0.000058               0.004638                   0.000018
+               Region_South               0.000057               0.006434                   0.000002
+                Region_West               0.000024               0.006590                   0.000002
+
+==============================================================
+Rank  Model                               Dataset  TestAcc
+==============================================================
+1     Gradient Boosting (tuned)           base      0.8692 ◄
+2     Decision Tree (tuned)               base      0.8607
+3     Random Forest (tuned)               base      0.8596
+4     KNN (tuned)                         FE        0.8594
+5     Kernel SVM (Nystroem RBF)           base      0.8539
+6     LinearSVC                           FE        0.8124
+7     Ridge Logistic Regression           FE        0.8035
+8     Logistic Regression                 FE        0.8033
+9     Lasso Logistic Regression           FE        0.8031
+10    Baseline (Most Frequent)            —         0.6558
+==============================================================
+
+[main] Total wall time: 39.6 min
+
+[export] Writing outputs to  '/home/wangy61/csse415termproject/finalscript/exported_models__C4_cascade_offer_restricted__binary__Offer_Received' ...
+  saved  Gradient_Boosting_tuned.joblib
+  saved  Decision_Tree_tuned.joblib
+  saved  Random_Forest_tuned.joblib
+  saved  KNN_tuned.joblib
+  saved  Kernel_SVM_Nystroem_RBF.joblib
+  saved  LinearSVC.joblib
+  saved  Ridge_Logistic_Regression.joblib
+  saved  Logistic_Regression.joblib
+  saved  Lasso_Logistic_Regression.joblib
+  saved  comparison.csv
+  saved  README.md
+[export] Done.

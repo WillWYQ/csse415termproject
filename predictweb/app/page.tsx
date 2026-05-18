@@ -3,14 +3,15 @@
 import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { OfferForm } from "@/components/OfferForm";
+import { SecondRoundForm } from "@/components/SecondRoundForm";
 import { ComingSoonCard } from "@/components/ComingSoonCard";
 import { AnimatedTabs } from "@/components/ui/tabs";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 
 const TABS = [
   { label: "🎯 Offer Received", value: "offer" },
+  { label: "🔁 2nd Interview", value: "second" },
   { label: "1st Interview", value: "first" },
-  { label: "2nd Interview", value: "second" },
 ];
 
 export default function Home() {
@@ -61,18 +62,12 @@ export default function Home() {
         {/* Content card */}
         <div className="w-full max-w-2xl rounded-2xl border border-neutral-200/80 dark:border-neutral-800/80 bg-white/90 dark:bg-neutral-900/80 backdrop-blur-sm shadow-xl p-8">
           {activeTab === "offer" && <OfferForm />}
+          {activeTab === "second" && <SecondRoundForm />}
           {activeTab === "first" && (
             <ComingSoonCard
               title="1st Interview Predictor"
               description="Predict whether you'll land a first-round interview based on your academic and application profile."
               features={["GPA", "University Rating", "Applications Submitted", "Major Category", "Platform"]}
-            />
-          )}
-          {activeTab === "second" && (
-            <ComingSoonCard
-              title="2nd Interview Predictor"
-              description="Predict whether a first-round interview will lead to a second round, based on your full profile."
-              features={["All Offer inputs", "1st Round Performance", "Networking", "Region"]}
             />
           )}
         </div>

@@ -1,0 +1,11 @@
+Rank,Model,Dataset,Val Acc (R1),Val Acc (R2),Test Accuracy,Time (s)
+1,Gradient Boosting (tuned),base,0.9103,0.9103,0.91335,1088.0
+2,Random Forest (tuned),base,0.9069,0.9071,0.90815,182.9
+3,Decision Tree (tuned),base,0.9000,0.9002,0.90355,44.5
+4,Kernel SVM (Nystroem RBF),base,0.8832,0.8850,0.8866,320.6
+5,KNN (tuned),FE,0.8813,0.8824,0.88245,461.9
+6,Logistic Regression,FE,0.8381,0.8381,0.8377,0.6
+7,Ridge Logistic Regression,FE,0.8380,0.8380,0.83765,2.7
+8,Lasso Logistic Regression,FE,0.8379,0.8379,0.8374,13.2
+9,LinearSVC,FE,0.8378,0.8379,0.83605,2057.5
+10,Baseline (Most Frequent),—,—,—,0.6577,—
