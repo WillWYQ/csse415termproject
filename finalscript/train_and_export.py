@@ -62,7 +62,8 @@ import textwrap
 import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
-
+import os
+import math
 import joblib
 import numpy as np
 import pandas as pd
@@ -266,7 +267,7 @@ def _kernel_svm_pipeline():
     return Pipeline([
         ("nystroem", Nystroem(kernel="rbf", random_state=0)),
         ("clf",      LogisticRegression(
-            max_iter=2000, random_state=0, class_weight="balanced"
+            max_iter=20000, random_state=0, class_weight="balanced"
         )),
     ])
 
@@ -366,7 +367,7 @@ def _build_project_specs(config: Dict[str, Any]) -> List[ModelSpec]:
         ModelSpec(
             name      = "Logistic Regression",
             estimator = LogisticRegression(
-                max_iter=1000, random_state=0, class_weight="balanced"
+                max_iter=10000, random_state=0, class_weight="balanced"
             ),
             dataset   = "FE",
             param_grid_1 = {},
