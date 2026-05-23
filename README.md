@@ -1,7 +1,7 @@
-# MA 415 Final Project — Try to Get a Job
+# CSSE / MA 415 Final Project — Try to Get a Job
 
 **Group:** Grp Try to get a Job  
-**Course:** MA 415, Rose-Hulman Institute of Technology, Spring 2026  
+**Course:** CSSE / MA 415, Rose-Hulman Institute of Technology, Spring 2026  
 **Contributors:** Yueqiao Wang, Mingkun Fu, Conner Tavares
 
 ---
