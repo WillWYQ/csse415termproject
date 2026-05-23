@@ -6,8 +6,29 @@
 
 ---
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Dataset](#dataset)
+- [Version History](#version-history)
+  - [Version 0 — Initial Exploration](#version-0--initial-exploration)
+  - [Version 1 — Regularization + Random Forest](#version-1--regularization--random-forest)
+  - [Version 2 — Stratified Split + Gradient Boosting](#version-2--stratified-split--gradient-boosting)
+  - [Version 3 — Binary Classification Pivot](#version-3--binary-classification-pivot)
+  - [Version 4 — Feature Engineering + Full Model Suite](#version-4--feature-engineering--full-model-suite)
+  - [!!! Final Submission — Cleaned & Documented](#-final-submission--cleaned--documented)
+- [Branch Overview](#branch-overview)
+  - [`fum` — Subgroup Analysis Notebooks](#fum--subgroup-analysis-notebooks)
+  - [`fum` — Subgroup Analysis Notebooks](#fum--subgroup-analysis-notebooks-1)
+  - [`export` — Scriptified Training Pipeline](#export--scriptified-training-pipeline)
+  - [`webApp` — Browser-Based Job Offer Predictor](#webapp--browser-based-job-offer-predictor)
+  - [Branch Summary](#branch-summary)
+- [Quick Reference: Files at a Glance](#quick-reference-files-at-a-glance)
+- [Setup](#setup)
+- [AI Disclosure](#ai-disclosure)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Dataset
 
